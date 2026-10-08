@@ -1,0 +1,10 @@
+// P50 / P95 / P99 latency by operation, last 1 hour
+// Source: Application Insights (AppRequests table)
+// Use: distinguish "slow for everyone" from "slow tail" during a degradation
+AppRequests
+| where TimeGenerated > ago(1h)
+| summarize p50 = percentile(DurationMs, 50),
+            p95 = percentile(DurationMs, 95),
+            p99 = percentile(DurationMs, 99)
+          by OperationName
+| order by p99 desc

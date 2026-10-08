@@ -1,0 +1,8 @@
+// Error rate by operation/service over the last 24 hours
+// Source: Application Insights (AppRequests table)
+// Use: first query to run when an alert fires — scopes which service is affected
+AppRequests
+| where TimeGenerated > ago(24h)
+| summarize Total = count(), Failed = countif(Success == false) by OperationName
+| extend ErrorRatePct = round(100.0 * Failed / Total, 2)
+| order by ErrorRatePct desc

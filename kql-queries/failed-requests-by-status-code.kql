@@ -1,0 +1,7 @@
+// Failed HTTP requests grouped by status code, last 24 hours
+// Source: Application Insights (AppRequests table)
+// Use: tell a client-side spike (4xx) apart from a backend issue (5xx) at a glance
+AppRequests
+| where TimeGenerated > ago(24h) and Success == false
+| summarize Count = count() by ResultCode, OperationName
+| order by Count desc

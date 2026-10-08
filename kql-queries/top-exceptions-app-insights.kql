@@ -1,0 +1,8 @@
+// Top exceptions by count, last 6 hours
+// Source: Application Insights (AppExceptions table)
+// Use: find the dominant failure mode fast instead of reading logs line by line
+AppExceptions
+| where TimeGenerated > ago(6h)
+| summarize Count = count() by ExceptionType, OuterMessage
+| order by Count desc
+| take 20
